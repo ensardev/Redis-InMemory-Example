@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using System;
 
 namespace InMemoryExample.Web.Controllers
 {
@@ -14,6 +15,14 @@ namespace InMemoryExample.Web.Controllers
 
         public IActionResult Index()
         {
+            _memoryCache.Set<string>("date", DateTime.Now.ToString());
+
+            return View();
+        }
+
+        public IActionResult GetData()
+        {
+            ViewBag.Date =  _memoryCache.Get<string>("date");
             return View();
         }
     }
