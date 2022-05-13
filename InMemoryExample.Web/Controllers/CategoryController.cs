@@ -22,7 +22,7 @@ namespace InMemoryExample.Web.Controllers
 
             //}
 
-            
+
             //Method 2
             //Zaman ataması yapmak için; 
             MemoryCacheEntryOptions options = new MemoryCacheEntryOptions();
@@ -34,12 +34,19 @@ namespace InMemoryExample.Web.Controllers
             //options.SlidingExpiration = TimeSpan.FromSeconds(10);
 
             //Cache item expire in absolute time with sliding expiration
-            options.AbsoluteExpiration = DateTime.Now.AddMinutes(1);
-            options.SlidingExpiration = TimeSpan.FromSeconds(10);
+            options.AbsoluteExpiration = DateTime.Now.AddSeconds(15);
+            //options.SlidingExpiration = TimeSpan.FromSeconds(10);
 
             //We set priorty to make sure that the cache item will be removed first
-            options.Priority = CacheItemPriority.High; 
+            options.Priority = CacheItemPriority.High;
             //First deleted low priority -> Level going Low - Normal - High - NeverRemove (Never never :D )
+
+
+            //RegisterPostEvictionCallback example
+            options.RegisterPostEvictionCallback((key, value, reason, state) =>
+            {
+                _memoryCache.Set("callback", $"Key: {key} value: {value} reason: {reason} substate: {state}");
+            });
 
             _memoryCache.Set<string>("date", DateTime.Now.ToString(), options);
 
@@ -51,8 +58,10 @@ namespace InMemoryExample.Web.Controllers
             //_memoryCache.GetOrCreate<string>("date", entry => DateTime.Now.ToString());
 
             _memoryCache.TryGetValue("date", out string dateCache);
+            _memoryCache.TryGetValue("callback", out string callbackCache);
 
             ViewBag.Date = dateCache;
+            ViewBag.Callback = callbackCache;
             return View();
         }
     }
