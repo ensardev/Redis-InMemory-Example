@@ -1,7 +1,9 @@
 ﻿@{
-    
+    Category category = ViewBag.Category as Category;
 }
 
 <h1>@ViewBag.Date</h1>
 <p>-----------------------------</p>
 <h3>@ViewBag.Callback</h3>
+
+<h3>@category.Name - @category.Description</h3>

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using InMemoryExample.Web.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using System;
 
@@ -50,6 +51,13 @@ namespace InMemoryExample.Web.Controllers
 
             _memoryCache.Set<string>("date", DateTime.Now.ToString(), options);
 
+
+            //Complex types caching example
+            Category category = new Category { Id = 1, Name = "Category 1", Description = "Category 1 description" };
+
+            _memoryCache.Set<Category>("category:1", category, options);
+
+
             return View();
         }
 
@@ -62,6 +70,10 @@ namespace InMemoryExample.Web.Controllers
 
             ViewBag.Date = dateCache;
             ViewBag.Callback = callbackCache;
+
+            ViewBag.Category = _memoryCache.Get<Category>("category:1");
+
+
             return View();
         }
     }
