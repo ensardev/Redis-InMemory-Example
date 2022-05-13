@@ -37,6 +37,9 @@ namespace InMemoryExample.Web.Controllers
             options.AbsoluteExpiration = DateTime.Now.AddMinutes(1);
             options.SlidingExpiration = TimeSpan.FromSeconds(10);
 
+            //We set priorty to make sure that the cache item will be removed first
+            options.Priority = CacheItemPriority.High; 
+            //First deleted low priority -> Level going Low - Normal - High - NeverRemove (Never never :D )
 
             _memoryCache.Set<string>("date", DateTime.Now.ToString(), options);
 
